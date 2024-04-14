@@ -12,8 +12,8 @@ jwt = JWTManager(app)
 
 @app.route('/login',methods=['POST'])
 def login():
-    email = request.form['email']
-    password = request.form['password']
+    email = request.json['email']
+    password = request.json['password']
     existingUser = Users.query.filter_by(emailID=email).first()
     if(existingUser):
         if(check_password_hash(existingUser.password,password)):
@@ -24,10 +24,10 @@ def login():
 
 @app.route('/register',methods=['POST'])
 def register():
-    email = request.form['email']
-    password = request.form['password']
-    username = request.form['username']
-    role = request.form['role']
+    email = request.json['email']
+    password = request.json['password']
+    username = request.json['username']
+    role = request.json['role']
     existingUser = Users.query.filter_by(emailID=email).first()
     if(not existingUser):
         newUser = Users(emailID=email,password=generate_password_hash('1234',method='pbkdf2:SHA256',salt_length=3),userName=username,role=role)
