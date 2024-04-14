@@ -9,3 +9,43 @@ jwt = JWTManager(app)
 
 
 #Write all routes here
+
+@app.route('/login',methods=['POST'])
+def login():
+    email = request.form['email']
+    password = request.form['password']
+    existingUser = Users.query.filter_by(emailID=email).first()
+    if(existingUser):
+        if(check_password_hash(existingUser.password,password)):
+            token = create_access_token(identity=existingUser.emailID)
+            return jsonify(token=token)
+        return '',403
+    return '',404
+
+@app.route('/register',methods=['POST'])
+def register():
+    email = request.form['email']
+    password = request.form['password']
+    username = request.form['username']
+    role = request.form['role']
+    existingUser = Users.query.filter_by(emailID=email).first()
+    if(not existingUser):
+        newUser = Users(emailID=email,password=generate_password_hash('1234',method='pbkdf2:SHA256',salt_length=3),userName=username,role=role)
+        db.session.add(newUser)
+        db.session.commit()
+        return jsonify(success='User Added'),201
+    return 'User already existed please login using your credentials',409
+
+
+@app.route('/getAllBooks',methods=['GET'])
+def get_all_books():
+    existingBooks = db.session.query(Books,BookCategory).join(BookCategory,Books.bookCategory == BookCategory.categoryID).all()
+    output = []
+    
+    if(existingBooks):
+        for book,category in existingBooks:
+            output.append({'Book Name':book.bookName,'Category':category.categoryName})
+        return jsonify(output)
+    
+    return 'No books found',404
+
