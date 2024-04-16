@@ -50,11 +50,20 @@ def dbSeed():
         {'userID':4,'userName':'staff2','emailID':'staff2@clg.com','password':generate_password_hash('1234',method='pbkdf2:SHA256',salt_length=3),'role':1}
     ]
 
+    status_data =[
+        {'statusID':0,'statusName':'Rejected'},
+        {'statusID':1,'statusName':'Granted'},
+        {'statusID':2,'statusName':'Requested'}
+    ]
+
+
     db.session.bulk_insert_mappings(Roles,roles_date)
     db.session.bulk_insert_mappings(BookLocation,book_location_data)
     db.session.bulk_insert_mappings(BookCategory,book_category_data)
     db.session.bulk_insert_mappings(Books,books_data)
     db.session.bulk_insert_mappings(Users,user_data)
+    db.session.bulk_insert_mappings(Status,status_data)
+    db.session.bulk_insert_mappings(AvailableBooks,books_data)
 
 
     db.session.commit()

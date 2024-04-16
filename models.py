@@ -37,7 +37,24 @@ class Users(db.Model):
     role = db.Column(db.Integer,db.ForeignKey('roles.roleID'))
     booksAssigned = db.Column(db.Integer,db.ForeignKey('books.bookID'))
 
-"""
-We need to create Three more Tables 'BookRequests','AssignedBooks','AvailableBooks'
-This is planned for next iteration
-"""
+class Status(db.Model):
+    statusID = db.Column(db.Integer,primary_key=True)
+    statusName = db.Column(db.String)
+
+class BookRequests(db.Model):
+    requestID = db.Column(db.Integer,primary_key=True)
+    requestedUserID = db.Column(db.Integer,db.ForeignKey('users.userID'))
+    requestedBook = db.Column(db.Integer,db.ForeignKey('books.bookID'))
+    status = db.Column(db.Integer,db.ForeignKey('status.statusID'))
+    comment = db.Column(db.String,default='No comments Provided')
+
+class AvailableBooks(db.Model):
+    bookID = db.Column(db.Integer,primary_key=True,autoincrement=True)
+    bookName = db.Column(db.String)
+    bookCategory = db.Column(db.String,db.ForeignKey('book_category.categoryID'))
+
+class AssignedBooks(db.Model):
+    bookID = db.Column(db.Integer,primary_key=True,autoincrement=True)
+    bookName = db.Column(db.String)
+    bookCategory = db.Column(db.String,db.ForeignKey('book_category.categoryID'))
+    currentBookOwner = db.Column(db.Integer,db.ForeignKey('users.userID'))

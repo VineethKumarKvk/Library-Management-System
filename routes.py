@@ -18,7 +18,7 @@ def login():
     if(existingUser):
         if(check_password_hash(existingUser.password,password)):
             token = create_access_token(identity=existingUser.emailID)
-            return jsonify(token=token)
+            return jsonify(token=token),200
         return '',403
     return '',404
 
@@ -45,7 +45,7 @@ def get_all_books():
     if(existingBooks):
         for book,category in existingBooks:
             output.append({'Book Name':book.bookName,'Category':category.categoryName})
-        return jsonify(output)
+        return jsonify(output),200
     
     return 'No books found',404
 
