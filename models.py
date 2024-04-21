@@ -10,19 +10,23 @@ db = SQLAlchemy(app)
 class BookLocation(db.Model):
     rackID = db.Column(db.Integer,primary_key=True)
     floorName = db.Column(db.String)
-    categoriesAvaliable = db.relationship('BookCategory',backref='locationDetails')
 
 class BookCategory(db.Model):
     categoryID = db.Column(db.Integer,primary_key=True)
     categoryName = db.Column(db.String)
-    rackID = db.Column(db.Integer,db.ForeignKey('book_location.rackID'),default=0)
     booksPresent = db.relationship('Books',backref='categoryDetails')
+
+class Status(db.Model):
+    statusID = db.Column(db.Integer,primary_key=True)
+    statusName = db.Column(db.String)
 
 class Books(db.Model):
     bookID = db.Column(db.Integer,primary_key=True,autoincrement=True)
     bookName = db.Column(db.String)
     bookCategory = db.Column(db.String,db.ForeignKey('book_category.categoryID'))
-    currentOwner = db.relationship('Users')
+    status = db.Column(db.Integer,db.ForeignKey('status.statusID'),default=0)
+    rack = db.Column(db.Integer,db.ForeignKey('book_location.rackID'))
+    borrowerID = db.Column(db.Integer,db.ForeignKey('users.userID'))
 
 class Roles(db.Model):
     roleID = db.Column(db.Integer,primary_key=True)
@@ -35,26 +39,18 @@ class Users(db.Model):
     emailID = db.Column(db.String,unique=True)
     password = db.Column(db.String)
     role = db.Column(db.Integer,db.ForeignKey('roles.roleID'))
-    booksAssigned = db.Column(db.Integer,db.ForeignKey('books.bookID'))
-
-class Status(db.Model):
-    statusID = db.Column(db.Integer,primary_key=True)
-    statusName = db.Column(db.String)
 
 class BookRequests(db.Model):
     requestID = db.Column(db.Integer,primary_key=True)
-    requestedUserID = db.Column(db.Integer,db.ForeignKey('users.userID'))
+    requestedUser = db.Column(db.Integer,db.ForeignKey('users.userID'))
     requestedBook = db.Column(db.Integer,db.ForeignKey('books.bookID'))
-    status = db.Column(db.Integer,db.ForeignKey('status.statusID'))
-    comment = db.Column(db.String,default='No comments Provided')
+    requestStatus = db.Column(db.Integer,db.ForeignKey('status.statusID'))
 
 class AvailableBooks(db.Model):
-    bookID = db.Column(db.Integer,primary_key=True,autoincrement=True)
-    bookName = db.Column(db.String)
-    bookCategory = db.Column(db.String,db.ForeignKey('book_category.categoryID'))
+    id = db.Column(db.Integer,primary_key=True)
+    bookID = db.Column(db.Integer,db.ForeignKey('books.bookID'),unique=True)
 
 class AssignedBooks(db.Model):
-    bookID = db.Column(db.Integer,primary_key=True,autoincrement=True)
-    bookName = db.Column(db.String)
-    bookCategory = db.Column(db.String,db.ForeignKey('book_category.categoryID'))
-    currentBookOwner = db.Column(db.Integer,db.ForeignKey('users.userID'))
+    id = db.Column(db.Integer,primary_key=True)
+    requestID = db.Column(db.Integer,db.ForeignKey('book_requests.requestID'))
+    bookID = db.Column(db.Integer,db.ForeignKey('books.bookID'),unique=True)

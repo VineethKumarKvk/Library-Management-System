@@ -35,12 +35,12 @@ def dbSeed():
     ]
 
     books_data = [
-        {'bookID':1,'bookName':'grooking Algorithms','bookCategory':1},
-        {'bookID':2,'bookName':'Let us C','bookCategory':1},
-        {'bookID':3,'bookName':'The magic of thinking big','bookCategory':2},
-        {'bookID':4,'bookName':'Atomic Habits','bookCategory':2},
-        {'bookID':5,'bookName':'GIT - The complete boot camp','bookCategory':3},
-        {'bookID':6,'bookName':'AGILE - Project Management','bookCategory':3}
+        {'bookID':1,'bookName':'grooking Algorithms','bookCategory':1,'status':0,'rack':0},
+        {'bookID':2,'bookName':'Let us C','bookCategory':1,'status':0,'rack':0},
+        {'bookID':3,'bookName':'The magic of thinking big','bookCategory':2,'status':0,'rack':0},
+        {'bookID':4,'bookName':'Atomic Habits','bookCategory':2,'status':0,'rack':2},
+        {'bookID':5,'bookName':'GIT - The complete boot camp','bookCategory':3,'status':0,'rack':0},
+        {'bookID':6,'bookName':'AGILE - Project Management','bookCategory':3,'status':0,'rack':0}
     ]
 
     user_data = [
@@ -51,9 +51,20 @@ def dbSeed():
     ]
 
     status_data =[
-        {'statusID':0,'statusName':'Rejected'},
+        {'statusID':0,'statusName':'Available'},
         {'statusID':1,'statusName':'Granted'},
-        {'statusID':2,'statusName':'Requested'}
+        {'statusID':2,'statusName':'Requested'},
+        {'statusID':3,'statusName':'Rejected'},
+        {'statusID':4,'statusName':'Closed'}
+    ]
+    
+    available_books_data = [
+        {'bookID':1},
+        {'bookID':2},
+        {'bookID':3},
+        {'bookID':4},
+        {'bookID':5},
+        {'bookID':6}
     ]
 
 
@@ -63,7 +74,7 @@ def dbSeed():
     db.session.bulk_insert_mappings(Books,books_data)
     db.session.bulk_insert_mappings(Users,user_data)
     db.session.bulk_insert_mappings(Status,status_data)
-    db.session.bulk_insert_mappings(AvailableBooks,books_data)
+    db.session.bulk_insert_mappings(AvailableBooks,available_books_data)
 
 
     db.session.commit()
